@@ -167,7 +167,7 @@ uint8_t uartGetRxMsgLength(uint8_t id){
 }
 
 
-uint8_t uartReadMsg(uint8_t id, uint8_t* msg, uint8_t cant){
+uint8_t uartReadMsg(uint8_t id, unsigned char* msg, uint8_t cant){
 #ifdef UART_SAFE_MODE
 	if (id >= UART_ID_N){
 		return false;
@@ -182,7 +182,7 @@ uint8_t uartReadMsg(uint8_t id, uint8_t* msg, uint8_t cant){
 }
 
 //mando la data
-uint8_t uartWriteMsg(uint8_t id, uint8_t* msg, uint8_t cant){
+uint8_t uartWriteMsg(uint8_t id, unsigned char* msg, uint8_t cant){
 #ifdef UART_SAFE_MODE
 	if (id >= UART_ID_N){
 		return 0;
