@@ -135,12 +135,6 @@ void checkRX(){
 		SendData();		// Re-send data
 	} else if (keepalive_flag) {						// Check KeepAlive
 		LedOff();
-	} else if (data_flag){
-		if (uartGetRxMsgLength(UART_ID) >= RX_LENGTH){
-			checkRX();
-		} else {
-			SendData();
-		}
 	}
 }
 

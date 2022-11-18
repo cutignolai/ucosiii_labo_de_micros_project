@@ -30,14 +30,14 @@ function txResponse(code) {
 
 function handleRx(buff) {
     console.log("------------------------------------------");
-    if (buff[0] == 0x01) {
+    if (buff[0] == 0x01 || buff[0] == 0x81) {
         if (buff.length - 1 < 6) {
             console.log('Received command 0x01 (SendData), with wrong length');
             discard = false;
         } else {
-            num1 = buff.readUInt16LE(1);
-            num2 = buff.readUInt16LE(3);
-            num3 = buff.readUInt16LE(5);
+            num1 = (buff.readUInt16LE(1) - 32768)%128;
+            num2 = (buff.readUInt16LE(3) - 32768)%128;
+            num3 = (buff.readUInt16LE(5) - 32768)%128;
             console.log('Received command 0x01 (SendData), num1=' + num1, 'num2=' + num2, 'num3=' + num3);
             url = "https://api.thingspeak.com/update.json?api_key=" + thingSpeakAPIKey 
                 + "&field1=" + num1
@@ -75,7 +75,7 @@ function handleRx(buff) {
                 discard = false;
             });
         }
-    } else if (buff[0] == 0x02) {
+    } else if (buff[0] == 0x02 || buff[0] == 0x82) {
         txResponse(0x82);
         discard = false;
     } else {
@@ -98,24 +98,25 @@ port.on('data', function (data) {
         if (mode === 0) {
             switch (state) {
             case 0:
-                if (data[i] == 0xAA) state++;
+                if (data[i] == 0xAA || data[i] == 0x2A) state++;
                 break;
             case 1:
-                if (data[i] == 0x55) state++;
+                if (data[i] == 0x55 || data[i] == 0xD5) state++;
                 else state = 0;
                 break;
             case 2:
-                if (data[i] == 0xC3) state++;
+                if (data[i] == 0xC3 || data[i] == 0x43) state++;
                 else state = 0;
                 break;
             case 3:
-                if (data[i] == 0x3C) {
+                if (data[i] == 0x3C || data[i] == 0xBC) {
                     state = 0;
                     mode = 1;
                 } else state = 0;
                 break;
             }
         } else if (mode == 1) {
+			data[i] = data[i] > 0x80 ? data[i] - 0x80 : data[i];
             if (data[i]) {
                 length = 0;
                 buff = Buffer.alloc(data[i]);
@@ -124,6 +125,7 @@ port.on('data', function (data) {
                 mode = 0;
             }
         } else {
+			data[i] = data[i] > 0x80 ? data[i] - 0x80 : data[i];
             buff[length++] = data[i];
             if (length == buff.length) {
                 discard = true;
