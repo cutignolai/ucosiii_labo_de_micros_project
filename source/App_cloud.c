@@ -51,9 +51,9 @@ uint8_t handle_RX();
 /*******************************************************************************
  * STATIC VARIABLES AND CONST VARIABLES WITH FILE LEVEL SCOPE
 *******************************************************************************/
-static unsigned char keepalive_msg[] = {0xAA, 0x55, 0xC3, 0x3C, 0x01, 0x02};
+static uint8_t keepalive_msg[] = {0xAA, 0x55, 0xC3, 0x3C, 0x01, 0x02};
 // static uint8_t keepalive_msg[] = {'A', '5', '3', '5', '1', '2'};
-static unsigned char data_msg[] = {0xAA, 0x55, 0xC3, 0x3C, 0x07, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+static uint8_t data_msg[] = {0xAA, 0x55, 0xC3, 0x3C, 0x07, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 // static uint8_t data_msg[] = {'A', '5', '3', '5', '7', '1', '0', '0', '0', '0', '0', '0'};
 // static uint16_t piso1 = 0;
 // static uint16_t piso2 = 0;
@@ -111,12 +111,12 @@ void SendData(){
 	data_msg[PISO2_IDX + 1] = GET_MSBYTE(piso2);
 	data_msg[PISO3_IDX] = GET_LSBYTE(piso3);
 	data_msg[PISO3_IDX + 1] = GET_MSBYTE(piso3);
-	uartWriteMsg(UART_ID, (unsigned char*) &data_msg[0], sizeof(data_msg));
+	uartWriteMsg(UART_ID, (uint8_t*) &data_msg[0], sizeof(data_msg));
 }
 
 void KeepAlive(){
 
-	uartWriteMsg(UART_ID, (unsigned char*) &keepalive_msg[0], sizeof(keepalive_msg));
+	uartWriteMsg(UART_ID, (uint8_t*) &keepalive_msg[0], sizeof(keepalive_msg));
 }
 
 void checkRX(){
@@ -135,12 +135,12 @@ void checkRX(){
 		SendData();		// Re-send data
 	} else if (keepalive_flag) {						// Check KeepAlive
 		LedOff();
-	/*} else if (data_flag){
+	} else if (data_flag){
 		if (uartGetRxMsgLength(UART_ID) >= RX_LENGTH){
 			checkRX();
 		} else {
 			SendData();
-		}*/
+		}
 	}
 }
 
@@ -149,13 +149,13 @@ void checkRX(){
 uint8_t handle_RX(){
 	
 	uint8_t r = false;
-	unsigned char header_rx[HEADER_LEN];
+	uint8_t header_rx[HEADER_LEN];
 	//uint8_t length;
-	unsigned char answer;
+	uint8_t answer;
 
-	uartReadMsg(UART_ID, (unsigned char*) &header_rx[0], 4);
+	uartReadMsg(UART_ID, (uint8_t*) &header_rx[0], 4);
 	//uartReadMsg(UART_ID, &length, 1);
-	uartReadMsg(UART_ID, (unsigned char*) &answer, 1);
+	uartReadMsg(UART_ID, &answer, 1);
 
 	if (answer == KEEPALIVE_OK){
 		r = IS_KEEPALIVE;

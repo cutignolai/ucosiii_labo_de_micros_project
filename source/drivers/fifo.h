@@ -39,7 +39,7 @@
 typedef uint8_t fifo_id_t;
 
 // FIFO VALUE TYPE
-typedef unsigned char fifo_value_t;
+typedef uint8_t fifo_value_t;
 
 /*******************************************************************************
  * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
