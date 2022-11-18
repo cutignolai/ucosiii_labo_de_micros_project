@@ -59,7 +59,6 @@ static unsigned char data_msg[] = {0xAA, 0x55, 0xC3, 0x3C, 0x07, 0x01, 0x00, 0x0
 // static uint16_t piso2 = 0;
 // static uint16_t piso3 = 0;
 
-static tim_id_t cloud_timer;
 static uint8_t timer_count = 1;
 
 static bool keepalive_flag = false;
