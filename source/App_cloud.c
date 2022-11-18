@@ -129,6 +129,7 @@ void checkRX(){
 	} else if (check == IS_DATA && data_flag){			// Check SendDataOK
 		data_flag = false;
 		keepalive_flag = false;
+		timer_count = TIMER_COUNT_RST;
 		LedGreenOn();
 	} else if (check == IS_FAIL && data_flag){			// Check SendDataFail
 		LedRedOn();
